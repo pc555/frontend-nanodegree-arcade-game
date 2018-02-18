@@ -1,8 +1,11 @@
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function(level) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
+    this.x = 0;
+    this.y = getRndInteger(60, 240);
+    this.speed = level * 30;
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
@@ -14,22 +17,72 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.x += this.speed * dt;
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
+    if(this.x > 505) this.x = 0; //reset enemy location if out of screen
+
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+var Player = function() {    
+    this.x = 200;
+    this.y = 450;
+    this.speed = 50; // moving at 30 pixel per key up
+    this.sprite = 'images/char-boy.png';//'images/char-cat-girl.png';
+}
 
+Player.prototype.update = function() {
+    //maybe check for collision??
+};
+
+Player.prototype.render = function(dt) {
+    if(this.y < 30) {
+        //player reached goal, reset player position and increase level
+        this.y = 450;
+        level++;
+        //console.log('levelup');
+        allEnemies.push(new Enemy(level));
+    }
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Player.prototype.handleInput = function(dt) {
+    switch(dt) {
+        case 'left':
+            this.x -= this.speed;
+            break;
+        case 'right':
+            this.x += this.speed;
+            break;
+        case 'up':
+            this.y -= this.speed;
+            break;        
+        case 'down':
+            this.y += this.speed;
+            break;
+    }
+    //console.log(ctx);
+    //console.log(`Player location: (${this.x} ${this.y}), pic size:`);
+};
+
+function checkCollision() {
+    
+}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-
+allEnemies = [new Enemy(1)];
+player = new Player();
 
 
 // This listens for key presses and sends the keys to your
@@ -44,3 +97,4 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+

@@ -22,7 +22,8 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        lastTime;
+        lastTime,
+        level = 1;
 
     canvas.width = 505;
     canvas.height = 606;
@@ -80,6 +81,7 @@ var Engine = (function(global) {
     function update(dt) {
         updateEntities(dt);
         // checkCollisions();
+        doc.getElementById('level').innerHTML = `Current Level: ${this.level}`;
     }
 
     /* This is called by the update function and loops through all of the
@@ -182,4 +184,5 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+    global.level = level;
 })(this);
