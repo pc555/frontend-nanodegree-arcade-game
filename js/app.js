@@ -36,20 +36,22 @@ function getRndInteger(min, max) {
 var Player = function() {    
     this.x = 200;
     this.y = 450;
-    this.speed = 50; // moving at 30 pixel per key up
-    this.sprite = 'images/char-boy.png';//'images/char-cat-girl.png';
+    this.speed = 50; // moving at 50 pixel per key up event
+    this.sprite = 'images/char-cat-girl.png';//'images/char-cat-girl.png';
 }
 
 Player.prototype.update = function() {
     //maybe check for collision??
+    if(checkCollision()){ 
+        alert('game over!');
+    }
 };
 
 Player.prototype.render = function(dt) {
     if(this.y < 30) {
-        //player reached goal, reset player position and increase level
+        //player reached goal, reset player position, increase level and add another enemy
         this.y = 450;
         level++;
-        //console.log('levelup');
         allEnemies.push(new Enemy(level));
     }
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -70,12 +72,34 @@ Player.prototype.handleInput = function(dt) {
             this.y += this.speed;
             break;
     }
-    //console.log(ctx);
-    //console.log(`Player location: (${this.x} ${this.y}), pic size:`);
 };
 
 function checkCollision() {
-    
+    //we need to check if player rectangle overlap with enemy rectangles
+    for(let enemy of allEnemies) {
+        if(rectangleOverlap(player.x - 15, player.y - 15, player.x + 15, player.y + 15,
+            enemy.x - 25, enemy.y - 15, enemy.x + 25, enemy.y + 15)) {
+                console.log('collision');
+                return true; 
+        }
+    }
+    return false;
+}
+
+//l1 represents top left of first rectangle, r1 represents bottom right of first rectangle
+function rectangleOverlap(l1x, l1y, r1x, r1y, l2x, l2y, r2x, r2y) {
+    //console.log(`(${l1x}, ${l1y}, ${r1x}, ${r1y})  (${l2x}, ${l2y}, ${r2x}, ${r2y})`);
+    // If one rectangle is on left side of other
+    if (l1x > r2x || l2x > r1x) {
+        return false;
+    }
+
+    // If one rectangle is above other
+    if (l1y > r2y || l2y > r1y) {
+        return false;
+    }
+
+    return true;
 }
 
 // Now instantiate your objects.
