@@ -1,6 +1,6 @@
 frontend-nanodegree-arcade-game
 ===============================
-- To play to game: https://pc555.github.io/frontend-nanodegree-arcade-game/
+- To play the game: https://pc555.github.io/frontend-nanodegree-arcade-game/
 
 - Original Instructions:
 
