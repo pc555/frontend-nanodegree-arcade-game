@@ -44,6 +44,7 @@ Player.prototype.update = function() {
     //maybe check for collision??
     if(checkCollision()){ 
         alert('game over!');
+        restart = true;
     }
 };
 

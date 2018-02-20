@@ -23,7 +23,9 @@ var Engine = (function(global) {
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime,
-        level = 1;
+        level = 1,
+        maxLevel = 1
+        restart = false;
 
     canvas.width = 505;
     canvas.height = 606;
@@ -79,9 +81,15 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
+        if(this.restart) {
+            reset();
+            this.restart = false;
+            return;
+        }
         updateEntities(dt);
         // checkCollisions();
-        doc.getElementById('level').innerHTML = `Current Level: ${this.level}`;
+        maxLevel = Math.max(this.level, maxLevel);
+        doc.getElementById('level').innerHTML = `Current Level: ${this.level} <br/> Max Level: ${maxLevel}`;
     }
 
     /* This is called by the update function and loops through all of the
@@ -164,6 +172,12 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        player.x = 200;
+        player.y = 450;
+        allEnemies.splice(1, allEnemies.length - 1);
+        allEnemies[0].x = 0;
+        this.level = 1;
+
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -185,4 +199,5 @@ var Engine = (function(global) {
      */
     global.ctx = ctx;
     global.level = level;
+    global.restart = restart;
 })(this);
